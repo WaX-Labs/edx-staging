@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ICD10 {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  display   String
+  version   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([code])
+  @@index([display])
+}
+
+model HealthAnalysis {
+  id          String   @id @default(uuid())
+  description String
+  diagnosis   String
+  conditions  Json     // Store conditions as JSON
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  costEstimations CostEstimation[]
+
+  @@index([createdAt])
+}
+
+model CostEstimation {
+  id              String   @id @default(uuid())
+  healthAnalysisId String
+  healthAnalysis   HealthAnalysis @relation(fields: [healthAnalysisId], references: [id])
+  location        Json     // Store location data as { latitude: string, longitude: string }
+  medicines       Json     // Store medicine costs as array
+  facilities      Json     // Store facility costs as array
+  totalCost       Json     // Store total cost data
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([healthAnalysisId])
+  @@index([createdAt])
+}

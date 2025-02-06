@@ -72,6 +72,7 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   await app.listen(port, host);
+  app.enableCors();
   logger.log(
     `🚀 ${configService.get(
       'app.name',

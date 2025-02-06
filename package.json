@@ -18,7 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "create-token": "ts-node src/modules/blockchain/scripts/create-eudox-token.ts"
+    "create-token": "ts-node src/modules/blockchain/scripts/create-eudox-token.ts",
+    "docker:build": "docker build -t artixteam/edx-stg:latest .",
+    "docker:push": "docker push artixteam/edx-stg:latest",
+    "docker:deploy": "npm run docker:build && npm run docker:push"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

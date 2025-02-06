@@ -12,7 +12,7 @@ WORKDIR /app
 
 # Copy package files
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 COPY prisma ./prisma/
 
@@ -56,7 +56,7 @@ WORKDIR /app
 
 # Copy package files
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 COPY prisma ./prisma/
 
@@ -83,43 +83,24 @@ RUN npx prisma generate
 
 
 # Set environment variables
-
 ENV APP_NAME="@eudox/dev" \
-
     APP_ENV="staging" \
-
     HTTP_ENABLE=true \
-
     HTTP_HOST="0.0.0.0" \
-
     HTTP_PORT=9001 \
-
     HTTP_VERSIONING_ENABLE=true \
-
     HTTP_VERSION=1 \
-
     ACCESS_TOKEN_SECRET_KEY="testme" \
-
     ACCESS_TOKEN_EXPIRED="1d" \
-
     REFRESH_TOKEN_SECRET_KEY="testme" \
-
     REFRESH_TOKEN_EXPIRED="7d" \
-
     RABBITMQ_URL="amqp://admin:master123@localhost:5672" \
-
     RABBITMQ_ICD10_QUEUE="icd10_queue" \
-
     DEEPSEEK_API_KEY="sk-fc628631dc2446d982b47ca613459162" \
-
     SOLANA_RPC_URL=https://api.devnet.solana.com \
-
     WALLET_PRIVATE_KEY="uAHa4bWbarh7xBKDAVQ7Cr5UNWra6ehqxgdkCrvBjyDY4ES9JMQNmMXX2HzEJds7Y7Ei6V9iemVhPJ36JyQ6CUt" \
-
     EUDOX_TOKEN_MINT="HqDBiQdkhb6PT4eWQFhri6dtXcwwmBhAfvKTfdpKvM5j" \
-
     DATABASE_URL="postgresql://eudoxdb:Master123@eudoxdb-staging.postgres.database.azure.com:5432/postgres?sslmode=require" \
-
     NODE_ENV=production
 
 
@@ -129,15 +110,8 @@ ENV APP_NAME="@eudox/dev" \
 EXPOSE ${HTTP_PORT}
 
 
-
 # Add a healthcheck (optional)
-
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-
-  CMD wget --quiet --tries=1 --spider http://localhost:${HTTP_PORT}/health || exit 1
-
-
-
-# Run the application
+    CMD wget --quiet --tries=1 --spider http://localhost:${HTTP_PORT}/health || exit 1
 
 CMD ["npm", "run", "start:dev"]

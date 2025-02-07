@@ -20,28 +20,42 @@ model ICD10 {
 }
 
 model HealthAnalysis {
-  id          String   @id @default(uuid())
-  description String
-  diagnosis   String
-  conditions  Json     // Store conditions as JSON
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String           @id @default(uuid())
+  description     String
+  diagnosis       String
+  conditions      Json // Store conditions as JSON
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   costEstimations CostEstimation[]
 
   @@index([createdAt])
 }
 
 model CostEstimation {
-  id              String   @id @default(uuid())
+  id               String         @id @default(uuid())
   healthAnalysisId String
   healthAnalysis   HealthAnalysis @relation(fields: [healthAnalysisId], references: [id])
-  location        Json     // Store location data as { latitude: string, longitude: string }
-  medicines       Json     // Store medicine costs as array
-  facilities      Json     // Store facility costs as array
-  totalCost       Json     // Store total cost data
+  location         Json // Store location data as { latitude: string, longitude: string }
+  medicines        Json // Store medicine costs as array
+  facilities       Json // Store facility costs as array
+  totalCost        Json // Store total cost data
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([healthAnalysisId])
+  @@index([createdAt])
+}
+
+model History {
+  id              Int      @id @default(autoincrement())
+  walletAddress   String
+  icdCode         String
+  longitude       String
+  latitude        String
+  estimatedBudget String
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  @@index([healthAnalysisId])
+  @@index([walletAddress])
   @@index([createdAt])
 }

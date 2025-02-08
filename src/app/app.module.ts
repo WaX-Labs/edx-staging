@@ -15,6 +15,7 @@ import { ICD10Module } from '../modules/icd10/icd10.module';
 import { HealthAnalysisModule } from '../modules/health-analysis/health-analysis.module';
 import { ConfigModule } from '@nestjs/config';
 import { CostEstimationModule } from 'src/modules/cost-estimation/cost-estimation.module';
+import { MedicalPlaceModule } from 'src/modules/medical-place/medical-place.module';
 
 const translationsPath = join(__dirname, '../i18n/');
 console.log('Translations Path:', translationsPath);
@@ -25,6 +26,7 @@ console.log('Translations Path:', translationsPath);
     ICD10Module,
     HealthAnalysisModule,
     CostEstimationModule,
+    MedicalPlaceModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     I18nModule.forRoot({
       fallbackLanguage: 'en',

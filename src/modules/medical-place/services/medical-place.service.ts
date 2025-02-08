@@ -40,7 +40,7 @@ export class MedicalPlaceService {
     icdCode: string,
     lat?: string,
     long?: string,
-  ): Promise<MedicalPlaceResponseDto> {
+  ): Promise<any> {
     try {
       this.logger.debug(
         `Analyzing description: ${icdCode}, lat: ${lat}, long: ${long}`,
@@ -60,7 +60,7 @@ export class MedicalPlaceService {
           messages: [
             {
               role: 'user',
-              content: `As a medical expert, analyze the following patient condition and find 10 nearby medical facilities:
+              content: `As a medical expert, analyze the following patient condition and find 5 nearby medical facilities:
               ICD Code: "${icdCode}"
               Location: ${lat ? `Latitude ${lat}, Longitude ${long}` : 'Not provided'}
               
@@ -80,7 +80,7 @@ export class MedicalPlaceService {
                       "treatment": "cost range"
                     }
                   }
-                  // Repeat for 10 facilities total
+                  // Repeat for 5 facilities total
                 ],
             `,
             },
@@ -111,22 +111,15 @@ export class MedicalPlaceService {
       console.log('cleanedContent', cleanedContent);
 
       try {
-        const parsedResponse = JSON.parse(cleanedContent);
-
         // Validate response structure and ensure 10 facilities
-        if (
-          !parsedResponse.analysis ||
-          !Array.isArray(parsedResponse.recommendedFacilities) ||
-          !Array.isArray(parsedResponse.possibleConditions) ||
-          parsedResponse.recommendedFacilities.length < 10
-        ) {
+        if (cleanedContent.length < 10) {
           throw new HttpException(
             'Invalid response format from Deepseek API - expected 10 facilities',
             HttpStatus.BAD_GATEWAY,
           );
         }
 
-        return parsedResponse;
+        return cleanedContent;
       } catch (parseError) {
         this.logger.error('Failed to parse cleaned content:', cleanedContent);
         throw new HttpException(
@@ -142,7 +135,7 @@ export class MedicalPlaceService {
 
   async analyzeMedicalPlace(
     dto: MedicalPlaceRequestDto,
-  ): Promise<MedicalPlaceResponseDto> {
+  ): Promise<any> {
     try {
       const aiAnalysis = await this.analyzeWithDeepseek(
         dto.icdCode,
@@ -150,7 +143,8 @@ export class MedicalPlaceService {
         dto.long,
       );
       console.log('aiAnalysis', aiAnalysis);
-      return aiAnalysis;
+      const parsedResponse = JSON.parse(aiAnalysis);
+      return parsedResponse;
     } catch (error) {
       this.logger.error('Error in analyzeMedicalPlace:', error);
       throw error;
